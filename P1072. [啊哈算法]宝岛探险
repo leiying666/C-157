@@ -1,0 +1,77 @@
+#define _CRT_SECURE_NO_WARNINGS 1
+#include<string.h>
+#include<errno.h>
+#include<stdlib.h>
+#include<math.h>
+#include<stdio.h>
+#include<assert.h>
+#define MAX 1000
+int a[100][100], v[100][100],c=0;
+typedef struct point
+{
+	int x;
+	int y;
+	int step;
+}Point;
+typedef struct queue
+{
+	Point* p;
+	int f;//首元素位置
+	int num;//元素个数
+}Queue;
+int dx[4] = { 0,1,0,-1 };
+int dy[4] = { 1,0,-1,0 };
+int main()
+{
+	int n, m,sx,sy;
+	scanf("%d%d%d%d", &n, &m,&sx,&sy);
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= m; j++)
+		{
+			scanf("%d", &a[i][j]);
+		}
+	}
+	sx = sx + 1;
+	sy = sy + 1;
+	Queue qu;
+	qu.p = (Point*)malloc(MAX * sizeof(Point));
+	qu.f = 0;
+	qu.num = 0;
+	Point start;
+	start.x = sx;
+	start.y = sy;
+	start.step = 0;
+	qu.p[1] = start;//首元素位置为1
+	qu.f++;
+	qu.num++;
+	v[sx][sy] = 1;
+	while (qu.f!=qu.num+1)//队列为0时，退出
+	{
+		int x = qu.p[qu.f].x,y= qu.p[qu.f].y;
+		for (int k = 0; k <= 3; k++)
+		{
+			int tx, ty;
+			tx = x + dx[k];
+			ty = y + dy[k];
+			if (a[tx][ty] !=0  && v[tx][ty] == 0)
+			{
+				Point tmp;
+				tmp.x = tx;
+				tmp.y = ty;
+				tmp.step = qu.p[qu.f].step + 1;
+				qu.p[qu.num+1] = tmp;
+				qu.num++;
+				v[tx][ty] = 1;
+			}
+		}
+		qu.f++;//队首元素出队
+	}
+	printf("%d", qu.num);
+	free(qu.p);
+	qu.p == NULL;
+	return 0;
+}
+
+
+没有明确终点也可以，只是单纯遍历所有需要遍历的数
